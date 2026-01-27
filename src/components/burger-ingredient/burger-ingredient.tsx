@@ -1,14 +1,25 @@
 import { FC, memo } from 'react';
 import { useLocation } from 'react-router-dom';
-
+import { v4 as uuidv4 } from 'uuid';
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
-
+import { useDispatch } from '../../services/store';
+import { addIngredient } from '../../services/slices/constructorSlice';
+// Объявление компонента
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
+    // Хранение текущих маршрутов
     const location = useLocation();
-
-    const handleAdd = () => {};
+    // Отправка действий
+    const dispatch = useDispatch();
+    // Обработка добавления
+    const handleAdd = () => {
+      const ingredientWithId = {
+        ...ingredient,
+        id: uuidv4()
+      };
+      dispatch(addIngredient(ingredientWithId));
+    };
 
     return (
       <BurgerIngredientUI

@@ -1,15 +1,21 @@
-import { useSelector } from '../../services/store';
-
-import styles from './constructor-page.module.css';
-
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
+import { listIngredientsLoading } from '../../services/selectors';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC } from 'react';
-
+import styles from './constructor-page.module.css';
+// Объявление компонента
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
-  const isIngredientsLoading = false;
+  // Функция для отправки действий
+  const dispatch = useDispatch();
+  // Загрузка ингредиентов
+  const isIngredientsLoading = useSelector(listIngredientsLoading);
+  // Загрузка ингредиентов
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
     <>
