@@ -2,6 +2,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { checkUserAuthentication } from '../../services/slices/authenticationSlice';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice'; // Импортируйте action
 import {
   ConstructorPage,
   Feed,
@@ -22,25 +23,24 @@ import {
 } from '@components';
 import '../../index.css';
 import styles from './app.module.css';
-
+// Объявление компонента
 const App = () => {
-  // Переход между маршрутами
+  // Реализация хуков
+  const location = useLocation();
   const navigate = useNavigate();
-  // Функция закрытия модального окна
-  const modalWindowClose = () => {
+  const dispatch = useDispatch();
+  // Показ модального окна поверх текущего
+  const background = location.state?.background;
+  // Закрытие модального окна
+  const handleModalClose = () => {
     navigate(-1);
   };
-  // Текущий маршрут
-  const location = useLocation();
-  // Отправка действий
-  const dispatch = useDispatch();
-  // Предыдущий маршрут
-  const background = location.state?.background;
-  // Проверка авторизации
+  // Мотирование компонента
   useEffect(() => {
     dispatch(checkUserAuthentication());
+    dispatch(fetchIngredients()); // Загружаем ингредиенты один раз при монтировании
   }, [dispatch]);
-  // Прокрутка страницы
+  // Управление скролом страницы во время появления модального окна
   useEffect(() => {
     if (background) {
       document.body.style.overflow = 'hidden';
@@ -121,7 +121,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='' onClose={modalWindowClose}>
+              <Modal title='' onClose={handleModalClose}>
                 <OrderInfo />
               </Modal>
             }
@@ -129,7 +129,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Детали ингредиента' onClose={modalWindowClose}>
+              <Modal title='Детали ингредиента' onClose={handleModalClose}>
                 <IngredientDetails />
               </Modal>
             }
@@ -138,7 +138,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal title='' onClose={modalWindowClose}>
+                <Modal title='' onClose={handleModalClose}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>
