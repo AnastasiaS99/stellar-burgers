@@ -13,9 +13,9 @@ export const ConstructorPage: FC = () => {
   // Загрузка ингредиентов
   const isIngredientsLoading = useSelector(listIngredientsLoading);
   // Загрузка ингредиентов
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
+  //useEffect(() => {
+  //dispatch(fetchIngredients());
+  //}, [dispatch]);
 
   return (
     <>

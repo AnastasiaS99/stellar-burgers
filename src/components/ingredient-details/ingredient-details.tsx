@@ -19,11 +19,11 @@ export const IngredientDetails: FC = () => {
   // Загрузка ингредиентов
   const isLoading = useSelector(listIngredientsLoading);
   // Загрузка данных
-  //useEffect(() => {
-  //if (!ingredients.length && !isLoading) {
-  dispatch(fetchIngredients());
-  //}
-  //}, [dispatch, ingredients.length, isLoading]);
+  useEffect(() => {
+    if (!ingredients.length && !isLoading) {
+      //dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length, isLoading]);
   // Поиск нужного ингредиента
   const ingredientData = useMemo(
     () => ingredients.find((ing) => ing._id === id),
