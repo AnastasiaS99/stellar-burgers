@@ -1,15 +1,29 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
-
+import { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { listFeeds, listFeedsLoading } from '../../services/selectors';
+import { fetchFeed } from '../../services/slices/feedSlice';
+// Объявление компонента
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  // Функция для отправки действий
+  const dispatch = useDispatch();
+  // Показывает текущую ленту заказов
+  const feeds = useSelector(listFeeds);
+  // Проверка загрузки
+  const isLoading = useSelector(listFeedsLoading);
+  // Загрузка данных
+  const loadingFeedsData = () => dispatch(fetchFeed());
+  // Загрузка данных
+  const handleGetFeeds = loadingFeedsData;
 
-  if (!orders.length) {
+  useEffect(() => {
+    loadingFeedsData();
+  }, [dispatch]);
+
+  if (isLoading || !feeds) {
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  return <FeedUI orders={feeds.orders} handleGetFeeds={handleGetFeeds} />;
 };

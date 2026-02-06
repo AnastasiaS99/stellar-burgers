@@ -1,32 +1,44 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-
+import { fetchOrderByNumber } from '../../services/slices/ordersSlice';
+// Объявление компонента
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  // Получение параметра
+  const { number } = useParams<{ number: string }>();
+  // Получние информации
+  const dispatch = useDispatch();
+  // Список ингредиентов
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  // Текущий заказ
+  const currentOrder = useSelector((state) => state.orders.currentOrder);
+  // Загрузка заказов
+  const isLoading = useSelector((state) => state.orders.isLoading);
+  // Дата заказа
+  const orderData = currentOrder;
+  // Загрузка данных по номеру заказа
+  useEffect(() => {
+    if (number) {
+      const orderNumber = Number(number);
+      if (!currentOrder || currentOrder.number !== orderNumber) {
+        dispatch(fetchOrderByNumber(orderNumber));
+      }
+    }
+  }, [dispatch, number, currentOrder]);
 
-  const ingredients: TIngredient[] = [];
-
-  /* Готовим данные для отображения */
+  // Подготовка данных для отображения
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
-
+    // Новая дата заказа
     const date = new Date(orderData.createdAt);
 
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };
     };
-
+    // Детали ингредиентов с подсчётом
     const ingredientsInfo = orderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
@@ -59,7 +71,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading || !orderInfo) {
     return <Preloader />;
   }
 
