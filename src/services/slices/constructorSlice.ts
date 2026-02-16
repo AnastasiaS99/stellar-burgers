@@ -12,7 +12,7 @@ const initialState: constructorState = {
 };
 // Создание слайса
 const constructorSlice = createSlice({
-  name: 'constructor',
+  name: 'burgerconstructor',
   initialState,
   reducers: {
     // Добавление ингридиента
@@ -58,3 +58,4 @@ export const {
 } = constructorSlice.actions;
 
 export default constructorSlice.reducer;
+export const constructorReducer = constructorSlice.reducer;
