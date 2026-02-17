@@ -1,5 +1,7 @@
 import { userReducer } from '../userSlice';
 import type { TUser } from '@utils-types';
+// Константы, чтобы убрать повторяющиеся селекторы 
+const error_msg = 'Произошла ошибка';
 // Мок пользователя
 const mockUser: TUser = {
   email: 'test@example.com',
@@ -36,7 +38,7 @@ describe('Начальное состояние', () => {
   it('должен сохранять ошибку, выключать loading', () => {
     const rejectedAction: any = {
       type: 'user/fetchUser/rejected',
-      error: { message: 'Ошибка' },
+      error: { message: error_msg },
       meta: {}
     };
     const state = userReducer(
@@ -45,6 +47,6 @@ describe('Начальное состояние', () => {
     );
 
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('Ошибка');
+    expect(state.error).toBe(error_msg);
   });
 });

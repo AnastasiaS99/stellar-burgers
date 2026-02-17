@@ -4,6 +4,8 @@ import orderModalReducer, {
   initialState
 } from '../orderModalSlice';
 import { TOrder } from '@utils-types';
+// Константы, чтобы убрать повторяющиеся селекторы
+const error_msg = 'Произошла ошибка';
 // Мок апи для заказа
 jest.mock('@api', () => ({
   orderBurgerApi: jest.fn()
@@ -45,7 +47,7 @@ describe('Тест слайса', () => {
     it('Очистка данных заказа в случае ошибки', () => {
       const state = orderModalReducer(initialState, {
         type: createNewOrder.rejected.type,
-        error: { message: 'Произошла ошибка' }
+        error: { message: error_msg }
       });
       expect(state.orderRequest).toBe(false);
       expect(state.orderModalData).toBeNull();

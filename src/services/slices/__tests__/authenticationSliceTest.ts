@@ -10,6 +10,9 @@ import authReducer, {
 import { TUser } from '@utils-types';
 
 import * as burgerApi from '@api';
+// Константа, чтобы убрать повторяющиеся селекторы
+const error_msg = 'Произошла ошибка';
+
 // Мок пользователя
 jest.mock('@api', () => ({
   loginUserApi: jest.fn(),
@@ -37,7 +40,7 @@ describe('authenticationSlice', () => {
   // Тест для сброса ошибки
   it('Очистка ошибки', () => {
     const state = authReducer(
-      { ...initialState, error: 'Произошла ошибка' },
+      { ...initialState, error: error_msg },
       clearError()
     );
     expect(state.error).toBeNull();
@@ -65,9 +68,9 @@ describe('authenticationSlice', () => {
     it('Сброс авторизации в случае ошибки', () => {
       const state = authReducer(initialState, {
         type: loginInUser.rejected.type,
-        error: { message: 'Произошла ошибка' }
+        error: { message: error_msg }
       });
-      expect(state.error).toBe('Произошла ошибка');
+      expect(state.error).toBe(error_msg);
       expect(state.isAuthenticated).toBe(false);
     });
   });
@@ -94,9 +97,9 @@ describe('authenticationSlice', () => {
     it('Ошибка', () => {
       const state = authReducer(initialState, {
         type: registerNewUser.rejected.type,
-        error: { message: 'Произошла ошибка' }
+        error: { message: error_msg }
       });
-      expect(state.error).toBe('Произошла ошибка');
+      expect(state.error).toBe(error_msg);
       expect(state.isLoading).toBe(false);
     });
   });
@@ -133,7 +136,7 @@ describe('authenticationSlice', () => {
     it('Сброс авторизации', () => {
       const state = authReducer(initialState, {
         type: checkUserAuthentication.rejected.type,
-        error: { message: 'Произошла ошибка' }
+        error: { message: error_msg}
       });
       expect(state.user).toBeNull();
       expect(state.isAuthenticated).toBe(false);

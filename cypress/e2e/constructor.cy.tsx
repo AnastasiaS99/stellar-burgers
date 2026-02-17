@@ -1,3 +1,12 @@
+// Создаем константы чтобы убрать повторяющиеся селекторы  
+  const bun_name = 'Краторная булка N-200i';
+  const patty_name = 'Биокотлета из марсианской Магнолии';
+  const sauce_name = 'Соус Spicy-X';
+  const add_button_text = 'Добавить';
+  const oder_button_text = 'Оформить заказ';
+  const modal_selector = '[class*="modal"]';
+  const modal_close_bin_selector = `${modal_selector} button[class*="button"]`;
+
 // Создаем группу для тестирования конструктора бургеров
 describe('Создание нужного бургера', () => {
   beforeEach(() => {
@@ -15,26 +24,26 @@ describe('Создание нужного бургера', () => {
   // Группа для добавления ингредиентов в бургер
   describe('Добавление ингредиентов в бургер', () => {
     it('Добавление булки в бургер', () => {
-      cy.contains('Краторная булка N-200i')
+      cy.contains(bun_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
     });
 
     it('Добавление начинки в бургер', () => {
-      cy.contains('Биокотлета из марсианской Магнолии')
+      cy.contains(patty_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
     });
 
     it('Добавление соуса Spicy-X в бургер', () => {
-      cy.contains('Соус Spicy-X')
+      cy.contains(sauce_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
     });
   });
@@ -42,10 +51,10 @@ describe('Создание нужного бургера', () => {
   // Модальное окно с деталями ингредиента
   describe('Открытие и закрытие модального окна с ингредиентами', () => {
     it('Открытие модального окна с выбранным ингредиентом', () => {
-      cy.contains('Соус Spicy-X').click();
+      cy.contains(sauce_name).click();
 
       cy.url({ timeout: 10000 }).should('include', '/ingredients/');
-      cy.contains('Соус Spicy-X', { timeout: 10000 }).should('exist');
+      cy.contains(sauce_name, { timeout: 10000 }).should('exist');
       cy.contains('Калории, ккал').should('exist');
       cy.contains('Белки, г').should('exist');
       cy.contains('Жиры, г').should('exist');
@@ -53,10 +62,10 @@ describe('Создание нужного бургера', () => {
     });
 
     it('Детали выбранного соуса отображаются корректно в модальном окне', () => {
-      cy.contains('Соус Spicy-X').click();
+      cy.contains(sauce_name).click();
 
       cy.url({ timeout: 10000 }).should('include', '/ingredients/');
-      cy.contains('Соус Spicy-X').should('exist');
+      cy.contains(sauce_name).should('exist');
       cy.contains('30').should('exist');
       cy.contains('30').should('exist');
       cy.contains('20').should('exist');
@@ -64,13 +73,13 @@ describe('Создание нужного бургера', () => {
     });
 
     it('Закрытие модального окна по кнопке', () => {
-      cy.contains('Соус Spicy-X').click();
+      cy.contains(sauce_name).click();
 
       cy.url({ timeout: 10000 }).should('include', '/ingredients/');
       cy.get('body').then(($body) => {
-        const modal = $body.find('[class*="modal"]');
+        const modal = $body.find(modal_selector);
         if (modal.length > 0) {
-          cy.get('[class*="modal"] button[class*="button"]').first().click();
+          cy.get(modal_close_bin_selector).first().click();
         }
       });
       cy.go('back');
@@ -78,7 +87,7 @@ describe('Создание нужного бургера', () => {
     });
 
     it('Закрытие модального окна по клику вне окна', () => {
-      cy.contains('Соус Spicy-X').click();
+      cy.contains(sauce_name).click();
 
       cy.url({ timeout: 10000 }).should('include', '/ingredients/');
       cy.get('body').click(0, 0, { force: true });
@@ -111,32 +120,32 @@ describe('Создание нужного бургера', () => {
 
     it('Создает заказ и показывает номер', () => {
       // Добавляем ингредиенты
-      cy.contains('Краторная булка N-200i')
+      cy.contains(bun_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
 
 
-      cy.contains('Биокотлета из марсианской Магнолии')
+      cy.contains(patty_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
 
 
-      cy.contains('Соус Spicy-X')
+      cy.contains(sauce_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
 
       cy.wait(1000);
       // Оформляем заказ
-      cy.get('button').contains('Оформить заказ').should('not.be.disabled').click({ force: true });
+      cy.get('button').contains(oder_button_text).should('not.be.disabled').click({ force: true });
 
       cy.url({ timeout: 5000 }).should('not.include', '/login');
       // Проверка номера заказа
@@ -145,35 +154,35 @@ describe('Создание нужного бургера', () => {
 
     it('Очистка конструктора после заказа', () => {
       // добавляем ингредиенты
-      cy.contains('Краторная булка N-200i')
+      cy.contains(bun_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
-      cy.contains('Биокотлета из марсианской Магнолии')
+      cy.contains(patty_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
-      cy.contains('Соус Spicy-X')
+      cy.contains(sauce_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
       cy.wait(1000);
 
-      cy.get('button').contains('Оформить заказ').should('not.be.disabled').click({ force: true });
+      cy.get('button').contains(oder_button_text).should('not.be.disabled').click({ force: true });
 
       cy.contains('12345', { timeout: 20000 }).should('exist');
 
       // закрываем модальное окно
       cy.get('body').then(($body) => {
-        const modal = $body.find('[class*="modal"]');
+        const modal = $body.find(modal_selector);
         if (modal.length > 0) {
-          cy.get('[class*="modal"] button[class*="button"]').first().click({ force: true });
+          cy.get(modal_close_bin_selector).first().click({ force: true });
         }
       });
       // Проверяем, что конструктор очищен
@@ -192,13 +201,13 @@ describe('Создание нужного бургера', () => {
       cy.wait('@getIngredients');
       cy.contains('Соберите бургер', { timeout: 10000 }).should('be.visible');
 
-      cy.contains('Краторная булка N-200i')
+      cy.contains(bun_name)
         .parents('li')
         .find('button')
-        .contains('Добавить')
+        .contains(add_button_text)
         .click();
 
-      cy.get('button').contains('Оформить заказ').click();
+      cy.get('button').contains(oder_button_text).click();
 
       // Проверка редиректа на страницу входа
       cy.url({ timeout: 5000 }).should('include', '/login');

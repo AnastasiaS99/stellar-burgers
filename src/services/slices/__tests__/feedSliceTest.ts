@@ -1,5 +1,8 @@
 import { feedReducer, fetchFeed } from '../feedSlice';
 import type { TOrdersData } from '@utils-types';
+// Константы, чтобы убрать повторяющиеся селекторы
+const request_id = 'request-id';
+const error_msg = 'Произошла шибка';
 // Блок тестов для тестирования ленты
 describe('Лента', () => {
   const initialState = feedReducer(undefined, { type: 'UNKNOWN' });
@@ -7,7 +10,7 @@ describe('Лента', () => {
   it('is loading true', () => {
     const state = feedReducer(
       { ...initialState, error: 'prev error' },
-      fetchFeed.pending('request-id', undefined)
+      fetchFeed.pending(request_id, undefined)
     );
 
     expect(state.isLoading).toBe(true);
@@ -34,7 +37,7 @@ describe('Лента', () => {
     // Вызов текущего состояния
     const state = feedReducer(
       { ...initialState, isLoading: true },
-      fetchFeed.fulfilled(payload as any, 'request-id', undefined) as any
+      fetchFeed.fulfilled(payload as any, request_id, undefined) as any
     );
 
     expect(state.isLoading).toBe(false);
@@ -44,10 +47,10 @@ describe('Лента', () => {
   it('Сохранение ошибки', () => {
     const state = feedReducer(
       { ...initialState, isLoading: true },
-      fetchFeed.rejected(new Error('Ошибка'), 'request-id', undefined, 'Ошибка')
+      fetchFeed.rejected(new Error(error_msg), request_id, undefined, error_msg)
     );
 
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('Ошибка');
+    expect(state.error).toBe(error_msg);
   });
 });

@@ -5,6 +5,9 @@ import orderReducer, {
   clearCurrentOrder
 } from '../ordersSlice';
 import type { TOrder } from '../../../utils/types';
+// Константы, чтобы убрать повторяющиеся селекторы
+const error_msg_orders = 'Ошибка заказа';
+const error_fetch_orders = 'Ошибка массива';
 // Мок заказа
 const mockOrder: TOrder = {
   _id: '1',
@@ -51,7 +54,7 @@ describe('orderReducer', () => {
   it('должен сохранять ошибку', () => {
     const rejectedAction: any = {
       type: createOrder.rejected.type,
-      error: { message: 'Ошибка заказа' },
+      error: { message: error_msg_orders },
       meta: {},
       arg: []
     };
@@ -61,7 +64,7 @@ describe('orderReducer', () => {
     );
 
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('Ошибка заказа');
+    expect(state.error).toBe(error_msg_orders);
   });
   // Тест на запрос списка заказов
   it('isLoading', () => {
@@ -96,14 +99,14 @@ describe('orderReducer', () => {
   it('должен сохранять ошибку', () => {
     const action: any = {
       type: fetchOrders.rejected.type,
-      error: { message: 'fail' },
+      error: { message: error_fetch_orders },
       meta: {},
       arg: []
     };
     const state = orderReducer({ ...initialState, isLoading: true }, action);
 
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('fail');
+    expect(state.error).toBe(error_fetch_orders);
   });
   // Очистка текущего заказа
   it('должен очищать текущий заказ', () => {

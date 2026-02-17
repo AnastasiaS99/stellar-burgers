@@ -1,5 +1,6 @@
 import ingredientsReducer, { fetchIngredients } from '../ingredientsSlice';
 import { TIngredient } from '../../../utils/types';
+
 // Моки ингредиентов
 const mockIngredients: TIngredient[] = [
   {
