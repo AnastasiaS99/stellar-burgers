@@ -42,3 +42,4 @@ const feedSlice = createSlice({
 });
 
 export default feedSlice.reducer;
+export const feedReducer = feedSlice.reducer;

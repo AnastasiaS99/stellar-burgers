@@ -55,3 +55,4 @@ const userSlice = createSlice({
 
 export const { clearUser, clearUserError } = userSlice.actions;
 export default userSlice.reducer;
+export const userReducer = userSlice.reducer;
